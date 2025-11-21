@@ -1,0 +1,171 @@
+/* FULL PIP‑BOY 3000 RETRO-TECH THEME */
+/* ------------------------------------ */
+/* Paleta principal Pip-Boy:
+   Negro #0a0f0a
+   Verde radioactivo #ffde99
+   Verde glow #ffcc66
+   Verde oscuro #c08a3f
+*/
+
+body {
+    background: #0a0f0a;
+    color: #ffde99;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 4px #ffcc66;
+}
+
+/* Efecto de scanlines CRT */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.2) 0px,
+        rgba(0, 0, 0, 0.2) 2px,
+        transparent 3px,
+        transparent 4px
+    );
+    opacity: 0.2;
+    z-index: 9999;
+}
+
+/* NAVBAR estilo terminal metálica */
+.navbar {
+    background: #0f140f !important;
+    border-bottom: 2px solid #c08a3f;
+    box-shadow: 0px 0px 12px #c08a3f;
+}
+.navbar-brand img {
+    filter: drop-shadow(0 0 6px #ffcc66);
+}
+.nav-link {
+    color: #ffde99 !important;
+}
+.nav-link:hover {
+    color: #ffcc66 !important;
+    text-shadow: 0 0 6px #ffcc66;
+}
+
+/* Sección de presentación como pantalla Pip-Boy */
+.myclass-main {
+    background: #1a1205;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow:
+        inset 0 0 10px #ffcc66,
+        0 0 20px #c08a3f;
+}
+
+.myclass-pic {
+    border: 4px solid #c08a3f;
+    box-shadow: 0 0 10px #ffcc66;
+}
+
+/* TITULOS */
+h1, h2, h3, h4, h5 {
+    color: #ffde99;
+    text-shadow: 0 0 5px #ffcc66;
+}
+
+/* Tarjetas de experiencia estilo módulo Vault‑Tec */
+.experiencia-columna {
+    background: #150e04;
+    border: 2px solid #c08a3f;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow:
+        inset 0 0 12px #c08a3f,
+        0 0 18px #1a1205;
+}
+.experiencia-columna i {
+    font-size: 3rem;
+    color: #ffcc66;
+    text-shadow: 0 0 8px #ffcc66;
+}
+
+/* PROYECTOS estilo pantalla retro */
+.proyecto {
+    background: #1a1205;
+    padding: 12px;
+    border: 2px solid #c08a3f;
+    border-radius: 10px;
+    box-shadow:
+        inset 0 0 15px #c08a3f,
+        0 0 15px #ffcc66;
+}
+.proyecto img {
+    border-radius: 8px;
+    filter: brightness(0.85) contrast(1.1);
+    box-shadow: 0 0 12px #c08a3f;
+}
+.overlay p {
+    color: #ffde99;
+    text-shadow: 0 0 4px #ffcc66;
+}
+
+/* BOTONES Pip‑Boy */
+.btn-info {
+    background: #201505;
+    border: 2px solid #c08a3f;
+    color: #ffde99;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #c08a3f;
+}
+.btn-info:hover {
+    background: #142014;
+    box-shadow: 0 0 14px #ffcc66;
+}
+.btn-info:active {
+    box-shadow: inset 0 0 10px #ffcc66;
+}
+
+/* TIPS estilo tarjeta CRT */
+.card {
+    background: #150e04;
+    border: 2px solid #c08a3f;
+    border-radius: 8px;
+    box-shadow: inset 0 0 10px #ffcc66;
+}
+.list-group-item {
+    background: #1a1205;
+    color: #ffde99;
+    border-bottom: 1px solid #c08a3f;
+}
+.list-group-item:hover {
+    background: #121b12;
+    text-shadow: 0 0 6px #ffcc66;
+}
+
+/* CARROUSEL Pip‑Boy */
+.carousel .container {
+    background: #1a1205;
+    padding: 20px;
+    border-radius: 14px;
+    border: 2px solid #c08a3f;
+    box-shadow: inset 0 0 15px #ffcc66;
+}
+.recomendacion-imagen {
+    border: 4px solid #c08a3f;
+    box-shadow: 0 0 10px #ffcc66;
+}
+
+/* CONTACTO panel retro-tech */
+.rectangulo {
+    background: #0c120c;
+    border: 2px solid #c08a3f;
+    border-radius: 12px;
+    box-shadow: inset 0 0 12px #c08a3f;
+}
+
+/* FOOTER panel inferior */
+footer {
+    background: #0a0f0a;
+    border-top: 2px solid #c08a3f;
+    box-shadow: 0 0 15px #c08a3f;
+}
+.footer-icon {
+    filter: drop-shadow(0 0 6px #ffcc66);
+}
