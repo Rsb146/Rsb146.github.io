@@ -1,171 +1,152 @@
-/* FULL PIP‑BOY 3000 RETRO-TECH THEME */
-/* ------------------------------------ */
-/* Paleta principal Pip-Boy:
-   Negro #0a0f0a
-   Verde radioactivo #ffde99
-   Verde glow #ffcc66
-   Verde oscuro #c08a3f
+/* FULL PIP-BOY 3000 RETRO-TECH THEME (GREEN/AMBER MODES + TEXTURES + CRT) */
+/* --------------------------------------------------------------------------- */
+/* This file contains:
+   - CSS variables for both GREEN and AMBER modes
+   - CRT scanlines and flicker
+   - Texture layers (scratch, rust, metal) referenced via ./images/*
+   - A small HTML snippet (at the bottom) to add the toggle button
+   - A JS snippet (commented) that you can copy into ./js/pipboy-toggle.js
 */
 
+:root {
+  --bg-0: #0a0f0a;
+  --bg-1: #0d110d;
+  --ink: #ffde99;
+  --glow: #ffcc66;
+  --metal: #c08a3f;
+  --scanline-alpha: 0.18;
+  --flicker-keyframes: flicker-amber;
+}
+
+.mode-amber {
+  --bg-0: #1a1205;
+  --bg-1: #150e04;
+  --ink: #ffde99;
+  --glow: #ffcc66;
+  --metal: #c08a3f;
+  --scanline-alpha: 0.20;
+  --flicker-keyframes: flicker-amber;
+}
+
+.mode-green {
+  --bg-0: #0a0f0a;
+  --bg-1: #0d110d;
+  --ink: #c8f29b;
+  --glow: #9adf6b;
+  --metal: #5b7f3b;
+  --scanline-alpha: 0.12;
+  --flicker-keyframes: flicker-green;
+}
+
 body {
-    background: #0a0f0a;
-    color: #ffde99;
-    font-family: 'Courier New', monospace;
-    text-shadow: 0 0 4px #ffcc66;
+  margin: 0;
+  background: var(--bg-0);
+  color: var(--ink);
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 4px var(--glow);
 }
 
-/* Efecto de scanlines CRT */
 body::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.2) 0px,
-        rgba(0, 0, 0, 0.2) 2px,
-        transparent 3px,
-        transparent 4px
-    );
-    opacity: 0.2;
-    z-index: 9999;
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,var(--scanline-alpha)) 0px,
+    rgba(0,0,0,var(--scanline-alpha)) 2px,
+    transparent 3px,
+    transparent 4px
+  );
+  z-index: 9998;
+  mix-blend-mode: multiply;
 }
 
-/* NAVBAR estilo terminal metálica */
+@keyframes flicker-amber {
+  0% { opacity: 1; }
+  5% { opacity: 0.97; }
+  7% { opacity: 0.9; }
+  10%{ opacity: 1; }
+  100%{ opacity: 1; }
+}
+
+@keyframes flicker-green {
+  0% { opacity: 1; }
+  6% { opacity: 0.96; }
+  9% { opacity: 0.92; }
+  12%{ opacity: 1; }
+  100%{ opacity: 1; }
+}
+
+.screen-flicker {
+  animation: var(--flicker-keyframes) 6s infinite;
+}
+
+.panel-textured {
+  background-color: var(--bg-1);
+  background-image:
+    url("./images/scratch.png"),
+    linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05)),
+    url("./images/metal_brushed.png"),
+    url("./images/rust.png");
+  background-blend-mode: overlay, normal, multiply;
+  background-size: auto, cover, cover, cover;
+}
+
+.panel {
+  border: 2px solid rgba(255,255,255,0.04);
+  border-left: 4px solid rgba(0,0,0,0.25);
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 0 18px rgba(0,0,0,0.6), inset 0 0 12px rgba(255,255,255,0.02);
+  background-color: var(--bg-1);
+}
+
 .navbar {
-    background: #0f140f !important;
-    border-bottom: 2px solid #c08a3f;
-    box-shadow: 0px 0px 12px #c08a3f;
-}
-.navbar-brand img {
-    filter: drop-shadow(0 0 6px #ffcc66);
-}
-.nav-link {
-    color: #ffde99 !important;
-}
-.nav-link:hover {
-    color: #ffcc66 !important;
-    text-shadow: 0 0 6px #ffcc66;
+  background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.7));
+  border-bottom: 2px solid var(--metal);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.7);
 }
 
-/* Sección de presentación como pantalla Pip-Boy */
+.navbar .navbar-brand img { filter: drop-shadow(0 0 6px var(--glow)); }
+.navbar .nav-link { color: var(--ink) !important; }
+.navbar .nav-link:hover { color: var(--glow) !important; text-shadow: 0 0 8px var(--glow); }
+
+#mode-toggle {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
+  color: var(--ink);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6), inset 0 0 6px rgba(255,255,255,0.02);
+  cursor: pointer;
+}
+
+#mode-toggle .dot {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+  margin-right: 8px; vertical-align: middle; box-shadow: 0 0 6px var(--glow);
+}
+
+#mode-toggle .dot.green { background: #9adf6b; }
+#mode-toggle .dot.amber { background: #ffcc66; }
+
 .myclass-main {
-    background: #1a1205;
-    padding: 30px;
-    border-radius: 18px;
-    box-shadow:
-        inset 0 0 10px #ffcc66,
-        0 0 20px #c08a3f;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 0 28px rgba(0,0,0,0.7), inset 0 0 18px rgba(255,255,255,0.02);
+  background-color: var(--bg-1);
 }
 
-.myclass-pic {
-    border: 4px solid #c08a3f;
-    box-shadow: 0 0 10px #ffcc66;
-}
+.myclass-pic { border: 3px solid var(--metal); box-shadow: 0 0 14px var(--glow); }
 
-/* TITULOS */
-h1, h2, h3, h4, h5 {
-    color: #ffde99;
-    text-shadow: 0 0 5px #ffcc66;
-}
+.proyecto { background-color: var(--bg-1); border: 1px solid rgba(255,255,255,0.03); border-radius: 8px; padding: 10px; box-shadow: inset 0 0 12px rgba(255,255,255,0.015); }
+.proyecto img { border-radius: 6px; box-shadow: 0 0 14px var(--glow); }
 
-/* Tarjetas de experiencia estilo módulo Vault‑Tec */
-.experiencia-columna {
-    background: #150e04;
-    border: 2px solid #c08a3f;
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow:
-        inset 0 0 12px #c08a3f,
-        0 0 18px #1a1205;
-}
-.experiencia-columna i {
-    font-size: 3rem;
-    color: #ffcc66;
-    text-shadow: 0 0 8px #ffcc66;
-}
+.btn-info { background: transparent; border: 1px solid var(--metal); color: var(--ink); padding: 8px 12px; border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+.btn-info:hover { box-shadow: 0 8px 22px rgba(0,0,0,0.75), 0 0 12px var(--glow); }
 
-/* PROYECTOS estilo pantalla retro */
-.proyecto {
-    background: #1a1205;
-    padding: 12px;
-    border: 2px solid #c08a3f;
-    border-radius: 10px;
-    box-shadow:
-        inset 0 0 15px #c08a3f,
-        0 0 15px #ffcc66;
-}
-.proyecto img {
-    border-radius: 8px;
-    filter: brightness(0.85) contrast(1.1);
-    box-shadow: 0 0 12px #c08a3f;
-}
-.overlay p {
-    color: #ffde99;
-    text-shadow: 0 0 4px #ffcc66;
-}
+.carousel .container { background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border-radius: 10px; border: 1px solid rgba(255,255,255,0.03); padding: 18px; }
+.recomendacion-imagen { border-radius: 50%; border: 3px solid var(--metal); box-shadow: 0 0 14px var(--glow); }
 
-/* BOTONES Pip‑Boy */
-.btn-info {
-    background: #201505;
-    border: 2px solid #c08a3f;
-    color: #ffde99;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #c08a3f;
-}
-.btn-info:hover {
-    background: #142014;
-    box-shadow: 0 0 14px #ffcc66;
-}
-.btn-info:active {
-    box-shadow: inset 0 0 10px #ffcc66;
-}
+footer { background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.9)); padding: 28px 12px; border-top: 2px solid var(--metal); }
 
-/* TIPS estilo tarjeta CRT */
-.card {
-    background: #150e04;
-    border: 2px solid #c08a3f;
-    border-radius: 8px;
-    box-shadow: inset 0 0 10px #ffcc66;
-}
-.list-group-item {
-    background: #1a1205;
-    color: #ffde99;
-    border-bottom: 1px solid #c08a3f;
-}
-.list-group-item:hover {
-    background: #121b12;
-    text-shadow: 0 0 6px #ffcc66;
-}
-
-/* CARROUSEL Pip‑Boy */
-.carousel .container {
-    background: #1a1205;
-    padding: 20px;
-    border-radius: 14px;
-    border: 2px solid #c08a3f;
-    box-shadow: inset 0 0 15px #ffcc66;
-}
-.recomendacion-imagen {
-    border: 4px solid #c08a3f;
-    box-shadow: 0 0 10px #ffcc66;
-}
-
-/* CONTACTO panel retro-tech */
-.rectangulo {
-    background: #0c120c;
-    border: 2px solid #c08a3f;
-    border-radius: 12px;
-    box-shadow: inset 0 0 12px #c08a3f;
-}
-
-/* FOOTER panel inferior */
-footer {
-    background: #0a0f0a;
-    border-top: 2px solid #c08a3f;
-    box-shadow: 0 0 15px #c08a3f;
-}
-.footer-icon {
-    filter: drop-shadow(0 0 6px #ffcc66);
-}
+.text-glow { text-shadow: 0 0 6px var(--glow); color: var(--ink); }
