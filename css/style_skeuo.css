@@ -1,95 +1,249 @@
+/* ===========================================================
+     STYLE SKEUO – PIP-BOY AMBER CRT + METAL FRAME FINAL
+   =========================================================== */
 
 :root {
   --bg-0: #1a1205;
-  --bg-1: #150e04;
-  --ink: #ffdca8;        /* brighter warm amber */
+  --bg-1: #0f0a03;
+  --ink: #ffdca8;        /* amber text */
+  --ink-strong: #ffe8b9;
   --glow: #ffbb55;
-  --metal: #c08a3f;
-  --scanline-alpha: 0.20;
-  --flicker-keyframes: flicker-amber;
+  --metal: #c29e4b;
+  --metal-dark: #6c5321;
+  --scanline-alpha: 0.18;
+  --panel-border: #d6b875;
 }
 
-/* Remove text shadows globally */
+/* =============================
+      GLOBAL RESET + CRT BASE
+   ============================= */
+
 body {
   margin: 0;
+  padding: 0;
   background: var(--bg-0);
   color: var(--ink);
-  font-family: 'Courier New', monospace;
-  -webkit-font-smoothing: antialiased;
-  text-shadow: none !important; /* removed */
-}
-
-/* Headers also clean */
-h1, h2, h3, h4, h5, h6, p, a, span, li {
+  font-family: "Courier New", monospace;
   text-shadow: none !important;
-  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* CRT scanlines kept */
+/* Bright amber text */
+h1, h2, h3, h4, h5, h6, p, a, span, li {
+  color: var(--ink-strong);
+  text-shadow: none !important;
+}
+
+/* CRT scanlines + vignette */
 body::before {
   content: "";
-  position: fixed; inset: 0;
+  position: fixed;
+  inset: 0;
   pointer-events: none;
+  z-index: 9998;
+
   background-image:
     repeating-linear-gradient(
       to bottom,
-      rgba(255, 180, 80, 0.10) 0px,
-      rgba(255, 180, 80, 0.10) 2px,
+      rgba(255, 190, 90, var(--scanline-alpha)) 0px,
+      rgba(255, 190, 90, var(--scanline-alpha)) 2px,
       transparent 3px,
       transparent 4px
     ),
     radial-gradient(circle at center,
       rgba(255, 200, 120, 0.08) 0%,
-      rgba(0,0,0,0.65) 85%
+      rgba(0, 0, 0, 0.8) 85%
     );
-  z-index: 9998;
   mix-blend-mode: screen;
 }
 
-/* Panels */
-.panel-textured {
-  background-color: var(--bg-1);
-  background-image:
-    url("./images/scratch.png"),
-    linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05)),
-    url("./images/metal_brushed.png"),
-    url("./images/rust.png");
-  background-blend-mode: overlay, normal, multiply;
-  background-size: auto, cover, cover, cover;
-  border: 2px solid rgba(255,255,255,0.05);
-  border-radius: 10px;
-  padding: 20px;
-  animation: terminal-power 8s infinite ease-in-out;
-}
-
-/* Terminal power-on/off flicker */
-@keyframes terminal-power {
+/* Flicker ON/OFF terminal */
+@keyframes terminal-flicker {
   0% { opacity: 0; filter: brightness(0%); }
-  2% { opacity: 1; filter: brightness(130%); }
-  4% { opacity: 0.5; }
-  6% { opacity: 1; }
+  2% { opacity: 1; filter: brightness(150%); }
+  5% { opacity: 0.7; }
+  7% { opacity: 1; }
   70% { opacity: 1; }
   72% { opacity: 0.6; }
   74% { opacity: 1; }
   100% { opacity: 1; }
 }
 
-/* Buttons */
+.panel-textured {
+  background-color: var(--bg-1);
+
+  background-image:
+    url("../images/scratch.png"),
+    url("../images/metal_brushed.png"),
+    url("../images/rust.png"),
+    linear-gradient(135deg, rgba(255,255,255,0.03), rgba(0,0,0,0.10));
+
+  background-blend-mode: overlay, multiply, multiply, normal;
+  background-size: cover;
+  border: 2px solid var(--panel-border);
+  border-radius: 12px;
+
+  padding: 20px;
+  margin-bottom: 25px;
+
+  animation: terminal-flicker 8s infinite ease-in-out;
+}
+
+/* ===============================
+   BUTTONS PIP-BOY STYLE
+   =============================== */
 .btn-info {
-  background: transparent;
+  background: transparent !important;
   border: 1px solid var(--metal);
-  color: var(--ink);
-  text-shadow: none !important;
+  color: var(--ink-strong);
+  border-radius: 6px;
+  transition: 0.2s;
 }
+
 .btn-info:hover {
-  box-shadow: 0 0 12px var(--glow);
+  box-shadow: 0 0 12px var(--glow), 0 0 4px var(--ink);
 }
 
-/* Titles */
-.seccion-titulo, .seccion-descripcion {
+/* ===============================
+   VIDEO PIP-BOY METAL FRAME
+   =============================== */
+
+.pipboy-frame {
+  position: relative;
+  width: fit-content;
+  margin: 20px auto;
+  padding: 0;
+}
+
+.pipboy-frame video {
+  display: block;
+  border: 3px solid var(--metal);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 10px var(--metal-dark),
+    0 0 15px rgba(255, 200, 120, 0.3);
+}
+
+/* Metal bars */
+.frame-top, .frame-bottom {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 18px;
+  background: linear-gradient(to bottom, var(--metal), var(--metal-dark));
+}
+
+.frame-top { top: -18px; border-radius: 6px 6px 0 0; }
+.frame-bottom { bottom: -18px; border-radius: 0 0 6px 6px; }
+
+.frame-left, .frame-right {
+  position: absolute;
+  top: 0;
+  width: 18px;
+  height: 100%;
+  background: linear-gradient(to right, var(--metal-dark), var(--metal));
+}
+
+.frame-left { left: -18px; border-radius: 6px 0 0 6px; }
+.frame-right { right: -18px; border-radius: 0 6px 6px 0; }
+
+/* ===============================
+   RECOMMENDATIONS METAL PANEL
+   =============================== */
+
+.reco-metal-frame {
+  position: relative;
+  padding: 20px 50px;
+  border: 3px solid var(--metal);
+  border-radius: 14px;
+
+  background-image:
+    url("../images/metal_brushed.png"),
+    url("../images/rust.png"),
+    linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(0,0,0,0.15));
+
+  background-blend-mode: overlay, multiply, normal;
+  background-size: cover;
+
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.7),
+    0 0 18px rgba(255, 190, 100, 0.3);
+}
+
+.reco-window {
+  text-align: center;
+  min-height: 260px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reco-item {
+  max-width: 640px;
+}
+
+/* Buttons */
+.reco-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--metal-dark);
+  border: 2px solid var(--metal);
+  color: var(--ink-strong);
+  font-size: 1.6rem;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.15s;
+  user-select: none;
+}
+
+.reco-btn:hover {
+  box-shadow: 0 0 10px var(--glow);
+  background: var(--metal);
+}
+
+.reco-left { left: 10px; }
+.reco-right { right: 10px; }
+
+/* ===============================
+   IMAGES / ICONS / MISC
+   =============================== */
+
+.recomendacion-imagen {
+  width: 120px;
+  height: 120px;
+  border: 3px solid var(--metal);
+  box-shadow: 0 0 8px rgba(255, 200, 100, 0.3);
+}
+
+.footer-icon {
+  width: 70px;
+}
+
+.icons-sn a i {
+  font-size: 1.5rem;
+  color: var(--ink-strong);
+  transition: 0.2s;
+}
+
+.icons-sn a i:hover {
+  text-shadow: 0 0 8px var(--glow);
+}
+
+/* ===============================
+   OPTIONAL: Light glow on titles
+   =============================== */
+.seccion-titulo {
+  color: var(--ink-strong);
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.seccion-descripcion {
   color: var(--ink);
-  text-shadow: none !important;
+  opacity: 0.8;
 }
 
-/* Glow utility removed */
-.text-glow { text-shadow: none !important; color: var(--ink); }
