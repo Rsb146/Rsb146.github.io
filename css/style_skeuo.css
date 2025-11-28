@@ -1,248 +1,152 @@
-/* ===========================================================
-     STYLE SKEUO – PIP-BOY AMBER CRT + METAL FRAME FINAL
-   =========================================================== */
+/* FULL PIP-BOY 3000 RETRO-TECH THEME (GREEN/AMBER MODES + TEXTURES + CRT) */
+/* --------------------------------------------------------------------------- */
+/* This file contains:
+   - CSS variables for both GREEN and AMBER modes
+   - CRT scanlines and flicker
+   - Texture layers (scratch, rust, metal) referenced via ./images/*
+   - A small HTML snippet (at the bottom) to add the toggle button
+   - A JS snippet (commented) that you can copy into ./js/pipboy-toggle.js
+*/
 
 :root {
-  --bg-0: #1a1205;
-  --bg-1: #0f0a03;
-  --ink: #ffdca8;        /* amber text */
-  --ink-strong: #ffe8b9;
-  --glow: #ffbb55;
-  --metal: #c29e4b;
-  --metal-dark: #6c5321;
+  --bg-0: #0a0f0a;
+  --bg-1: #0d110d;
+  --ink: #ffde99;
+  --glow: #ffcc66;
+  --metal: #c08a3f;
   --scanline-alpha: 0.18;
-  --panel-border: #d6b875;
+  --flicker-keyframes: flicker-amber;
 }
 
-/* =============================
-      GLOBAL RESET + CRT BASE
-   ============================= */
+.mode-amber {
+  --bg-0: #1a1205;
+  --bg-1: #150e04;
+  --ink: #ffde99;
+  --glow: #ffcc66;
+  --metal: #c08a3f;
+  --scanline-alpha: 0.20;
+  --flicker-keyframes: flicker-amber;
+}
+
+.mode-green {
+  --bg-0: #0a0f0a;
+  --bg-1: #0d110d;
+  --ink: #c8f29b;
+  --glow: #9adf6b;
+  --metal: #5b7f3b;
+  --scanline-alpha: 0.12;
+  --flicker-keyframes: flicker-green;
+}
 
 body {
   margin: 0;
-  padding: 0;
   background: var(--bg-0);
   color: var(--ink);
-  font-family: "Courier New", monospace;
-  text-shadow: none !important;
-  -webkit-font-smoothing: antialiased;
-  position: relative;
-  overflow-x: hidden;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 4px var(--glow);
 }
 
-/* Bright amber text */
-h1, h2, h3, h4, h5, h6, p, a, span, li {
-  color: var(--ink-strong);
-  text-shadow: none !important;
-}
-
-/* CRT scanlines + vignette */
 body::before {
   content: "";
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,var(--scanline-alpha)) 0px,
+    rgba(0,0,0,var(--scanline-alpha)) 2px,
+    transparent 3px,
+    transparent 4px
+  );
   z-index: 9998;
-
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255, 190, 90, var(--scanline-alpha)) 0px,
-      rgba(255, 190, 90, var(--scanline-alpha)) 2px,
-      transparent 3px,
-      transparent 4px
-    ),
-    radial-gradient(circle at center,
-      rgba(255, 200, 120, 0.08) 0%,
-      rgba(0, 0, 0, 0.8) 85%
-    );
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
 }
 
-/* Flicker ON/OFF terminal */
-@keyframes terminal-flicker {
-  0% { opacity: 0; filter: brightness(0%); }
-  2% { opacity: 1; filter: brightness(150%); }
-  5% { opacity: 0.7; }
-  7% { opacity: 1; }
-  70% { opacity: 1; }
-  72% { opacity: 0.6; }
-  74% { opacity: 1; }
-  100% { opacity: 1; }
+@keyframes flicker-amber {
+  0% { opacity: 1; }
+  5% { opacity: 0.97; }
+  7% { opacity: 0.9; }
+  10%{ opacity: 1; }
+  100%{ opacity: 1; }
+}
+
+@keyframes flicker-green {
+  0% { opacity: 1; }
+  6% { opacity: 0.96; }
+  9% { opacity: 0.92; }
+  12%{ opacity: 1; }
+  100%{ opacity: 1; }
+}
+
+.screen-flicker {
+  animation: var(--flicker-keyframes) 6s infinite;
 }
 
 .panel-textured {
   background-color: var(--bg-1);
-
   background-image:
-    url("../images/scratch.png"),
-    url("../images/metal_brushed.png"),
-    url("../images/rust.png"),
-    linear-gradient(135deg, rgba(255,255,255,0.03), rgba(0,0,0,0.10));
-
-  background-blend-mode: overlay, multiply, multiply, normal;
-  background-size: cover;
-  border: 2px solid var(--panel-border);
-  border-radius: 12px;
-
-  padding: 20px;
-  margin-bottom: 25px;
-
-  animation: terminal-flicker 8s infinite ease-in-out;
+    url("./images/scratch.png"),
+    linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05)),
+    url("./images/metal_brushed.png"),
+    url("./images/rust.png");
+  background-blend-mode: overlay, normal, multiply;
+  background-size: auto, cover, cover, cover;
 }
 
-/* ===============================
-   BUTTONS PIP-BOY STYLE
-   =============================== */
-.btn-info {
-  background: transparent !important;
-  border: 1px solid var(--metal);
-  color: var(--ink-strong);
-  border-radius: 6px;
-  transition: 0.2s;
-}
-
-.btn-info:hover {
-  box-shadow: 0 0 12px var(--glow), 0 0 4px var(--ink);
-}
-
-/* ===============================
-   VIDEO PIP-BOY METAL FRAME
-   =============================== */
-
-.pipboy-frame {
-  position: relative;
-  width: fit-content;
-  margin: 20px auto;
-  padding: 0;
-}
-
-.pipboy-frame video {
-  display: block;
-  border: 3px solid var(--metal);
+.panel {
+  border: 2px solid rgba(255,255,255,0.04);
+  border-left: 4px solid rgba(0,0,0,0.25);
   border-radius: 10px;
-  box-shadow:
-    inset 0 0 10px var(--metal-dark),
-    0 0 15px rgba(255, 200, 120, 0.3);
+  padding: 18px;
+  box-shadow: 0 0 18px rgba(0,0,0,0.6), inset 0 0 12px rgba(255,255,255,0.02);
+  background-color: var(--bg-1);
 }
 
-/* Metal bars */
-.frame-top, .frame-bottom {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 18px;
-  background: linear-gradient(to bottom, var(--metal), var(--metal-dark));
+.navbar {
+  background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.7));
+  border-bottom: 2px solid var(--metal);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.7);
 }
 
-.frame-top { top: -18px; border-radius: 6px 6px 0 0; }
-.frame-bottom { bottom: -18px; border-radius: 0 0 6px 6px; }
+.navbar .navbar-brand img { filter: drop-shadow(0 0 6px var(--glow)); }
+.navbar .nav-link { color: var(--ink) !important; }
+.navbar .nav-link:hover { color: var(--glow) !important; text-shadow: 0 0 8px var(--glow); }
 
-.frame-left, .frame-right {
-  position: absolute;
-  top: 0;
-  width: 18px;
-  height: 100%;
-  background: linear-gradient(to right, var(--metal-dark), var(--metal));
-}
-
-.frame-left { left: -18px; border-radius: 6px 0 0 6px; }
-.frame-right { right: -18px; border-radius: 0 6px 6px 0; }
-
-/* ===============================
-   RECOMMENDATIONS METAL PANEL
-   =============================== */
-
-.reco-metal-frame {
-  position: relative;
-  padding: 20px 50px;
-  border: 3px solid var(--metal);
-  border-radius: 14px;
-
-  background-image:
-    url("../images/metal_brushed.png"),
-    url("../images/rust.png"),
-    linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(0,0,0,0.15));
-
-  background-blend-mode: overlay, multiply, normal;
-  background-size: cover;
-
-  box-shadow:
-    inset 0 0 12px rgba(0,0,0,0.7),
-    0 0 18px rgba(255, 190, 100, 0.3);
-}
-
-.reco-window {
-  text-align: center;
-  min-height: 260px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.reco-item {
-  max-width: 640px;
-}
-
-/* Buttons */
-.reco-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--metal-dark);
-  border: 2px solid var(--metal);
-  color: var(--ink-strong);
-  font-size: 1.6rem;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.15s;
-  user-select: none;
-}
-
-.reco-btn:hover {
-  box-shadow: 0 0 10px var(--glow);
-  background: var(--metal);
-}
-
-.reco-left { left: 10px; }
-.reco-right { right: 10px; }
-
-/* ===============================
-   IMAGES / ICONS / MISC
-   =============================== */
-
-.recomendacion-imagen {
-  width: 120px;
-  height: 120px;
-  border: 3px solid var(--metal);
-  box-shadow: 0 0 8px rgba(255, 200, 100, 0.3);
-}
-
-.footer-icon {
-  width: 70px;
-}
-
-.icons-sn a i {
-  font-size: 1.5rem;
-  color: var(--ink-strong);
-  transition: 0.2s;
-}
-
-.icons-sn a i:hover {
-  text-shadow: 0 0 8px var(--glow);
-}
-
-/* ===============================
-   OPTIONAL: Light glow on titles
-   =============================== */
-.seccion-titulo {
-  color: var(--ink-strong);
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.seccion-descripcion {
+#mode-toggle {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
   color: var(--ink);
-  opacity: 0.8;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6), inset 0 0 6px rgba(255,255,255,0.02);
+  cursor: pointer;
 }
+
+#mode-toggle .dot {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+  margin-right: 8px; vertical-align: middle; box-shadow: 0 0 6px var(--glow);
+}
+
+#mode-toggle .dot.green { background: #9adf6b; }
+#mode-toggle .dot.amber { background: #ffcc66; }
+
+.myclass-main {
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 0 28px rgba(0,0,0,0.7), inset 0 0 18px rgba(255,255,255,0.02);
+  background-color: var(--bg-1);
+}
+
+.myclass-pic { border: 3px solid var(--metal); box-shadow: 0 0 14px var(--glow); }
+
+.proyecto { background-color: var(--bg-1); border: 1px solid rgba(255,255,255,0.03); border-radius: 8px; padding: 10px; box-shadow: inset 0 0 12px rgba(255,255,255,0.015); }
+.proyecto img { border-radius: 6px; box-shadow: 0 0 14px var(--glow); }
+
+.btn-info { background: transparent; border: 1px solid var(--metal); color: var(--ink); padding: 8px 12px; border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+.btn-info:hover { box-shadow: 0 8px 22px rgba(0,0,0,0.75), 0 0 12px var(--glow); }
+
+.carousel .container { background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border-radius: 10px; border: 1px solid rgba(255,255,255,0.03); padding: 18px; }
+.recomendacion-imagen { border-radius: 50%; border: 3px solid var(--metal); box-shadow: 0 0 14px var(--glow); }
+
+footer { background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.9)); padding: 28px 12px; border-top: 2px solid var(--metal); }
+
+.text-glow { text-shadow: 0 0 6px var(--glow); color: var(--ink); }
